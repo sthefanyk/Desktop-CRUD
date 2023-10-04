@@ -111,7 +111,7 @@ function create(nome, email, disciplina, senha) {
         .then((response) => {
             console.log("Usuário cadastrado com sucesso:", response.data);
             $("#cadastrarUsuario").modal("hide");
-            alert("Usuário cadastrado com sucesso");
+            // alert("Usuário cadastrado com sucesso");
             buscarDadosEPreencherTabela();
         })
         .catch((error) => {
@@ -122,27 +122,34 @@ function create(nome, email, disciplina, senha) {
 // DELETE ---------------------------------------------------------------------
 
 document.addEventListener("click", function (event) {
+    
     if (event.target && event.target.classList.contains("btn-delete")) {
         const id = event.target.dataset.id;
-        deleteUser(id);
+        document.documentElement.dataset.userId = id;
+        $("#modalDeletar").modal("show");
     }
 });
 
+document
+    .getElementById("btnExcluirUsuario")
+    .addEventListener("click", function (event) {
+        const id = document.documentElement.dataset.userId;
+
+        if (id) deleteUser(id);
+        
+        $("#modalDeletar").modal("hide");
+    });
+
 function deleteUser(id) {
-    const confirmacao = confirm("Tem certeza que deseja excluir este usuário?");
-    if (confirmacao) {
-        axios
-            .delete(`http://localhost:3000/deletarUsuario/${id}`)
-            .then((response) => {
-                console.log("Usuário deletado com sucesso!");
-                buscarDadosEPreencherTabela();
-            })
-            .catch((error) => {
-                console.error("Ocoreu um erro ao deletar usuário: ", error);
-            });
-    } else {
-        console.log("Exclusão cancelada pelo usuário");
-    }
+    
+    axios
+        .delete(`http://localhost:3000/deletarUsuario/${id}`)
+        .then((response) => {
+            buscarDadosEPreencherTabela();
+        })
+        .catch((error) => {
+            console.error("Ocoreu um erro ao deletar usuário: ", error);
+        });
 }
 
 
@@ -205,7 +212,7 @@ function updateUser(id, name, email, subject) {
             disciplina: subject
         })
         .then((response) => {
-            alert("Usuário atualizado com sucesso!");
+            // alert("Usuário atualizado com sucesso!");
             buscarDadosEPreencherTabela()
         })
         .catch((error) => {

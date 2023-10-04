@@ -175,3 +175,40 @@ function findById(id) {
             alert("Ocorreu um erro ao recuperar usuário: ", error);
         });
 }
+
+document
+    .getElementById("btnEditarUsuario")
+    .addEventListener("click", function (event) {
+        const id = document.documentElement.dataset.idUsuario;
+
+        const newName = document.querySelector(
+            '#editarUsuario input[type="text"]'
+        ).value;
+        const newEmail = document.querySelector(
+            '#editarUsuario input[type="email"]'
+        ).value;
+        const newSubject = document.querySelector(
+            "#editarUsuario textarea"
+        ).value;
+
+        if (newName && newEmail && newSubject) {
+            updateUser(id, newName, newEmail, newSubject);
+            $("#editarUsuario").modal("hide");
+        }
+    });
+
+function updateUser(id, name, email, subject) {
+    axios
+        .put(`http://localhost:3000/atualizarUsuario/${id}`, {
+            nome: name,
+            email,
+            disciplina: subject
+        })
+        .then((response) => {
+            alert("Usuário atualizado com sucesso!");
+            buscarDadosEPreencherTabela()
+        })
+        .catch((error) => {
+            alert("Ocorreu um erro ao editar usuário:", error);
+        });
+}
